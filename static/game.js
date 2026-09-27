@@ -551,6 +551,15 @@ async function startPacmanGame() {
     outOfLives = false;
     mazeCleared = false;
 
+    // A new game starts with the normal instructions, not the Boss
+    // message from a previous game (same reset as exitPacmanGame()).
+    const instructions =
+        document.getElementById("game-instructions");
+
+    instructions.textContent = defaultInstructionsText;
+
+    instructions.classList.remove("boss-alert");
+
 
     /*
      * Load game assets
