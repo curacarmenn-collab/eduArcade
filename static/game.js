@@ -211,6 +211,11 @@ async function loadUser() {
 function setUserEmail(email) {
     userEmail = email;
 
+    // Signed in: the Game tab can be opened (Play still needs a topic).
+    if (email) {
+        document.getElementById("tab-game").disabled = false;
+    }
+
     // index.html's account menu listens for this to update the avatar.
     window.dispatchEvent(new Event("account-changed"));
 }

@@ -188,7 +188,7 @@ Question difficulty adapts to each student, concept by concept. It uses the exis
    ```bash
    python app.py
    ```
-   Open **http://127.0.0.1:5000**.
+   Open **http://127.0.0.1:5001**.
 
 **If you prefer `flask run`**, run `python app.py` once first: that creates `database.db` from `schema.sql`. Then:
 
@@ -196,7 +196,7 @@ Question difficulty adapts to each student, concept by concept. It uses the exis
 flask --app app run --debug --port 5001
 ```
 
-> **macOS tip:** if the page doesn't load on port 5000, AirPlay Receiver may be using that port. Use `http://127.0.0.1:5000` rather than `localhost`, turn off AirPlay Receiver in System Settings → General → AirDrop & Handoff, or use port 5001.
+> **macOS tip:** the app uses port 5001 because AirPlay Receiver often takes port 5000 on macOS.
 
 Games in progress are held in server memory. Restarting the server, including the debug server's auto-reload when a Python file is saved, ends any game in progress. Answers already given are safe in the database.
 
