@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Game Concept</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <input class="state-control" type="radio" name="screen" id="homepage" checked>
+  <input class="state-control" type="radio" name="screen" id="gamepage">
+  <input class="state-control" type="radio" name="screen" id="pacman-rules">
+  <input class="state-control" type="radio" name="screen" id="pacman-explanation">
+
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="google-wordmark">Google</div>
+
+      <div class="search-field">
+        <span>Photosynthesis</span>
+        <div class="search-actions">
+          <span>×</span>
+          <span class="divider"></span>
+          <span>♩</span>
+          <span>◉</span>
+          <span>⌕</span>
+        </div>
+      </div>
+
+      <div class="account-actions">
+        <span>↗</span>
+        <span>⠿</span>
+        <span class="avatar">👩🏻</span>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <label for="homepage">AI Mode</label>
+      <label for="homepage" class="all-tab">All</label>
+      <span>Images</span>
+      <span>News</span>
+      <span>Videos</span>
+      <span>Forums</span>
+      <label for="gamepage" class="game-tab">Game</label>
+      <span>More⌄</span>
+      <span>Tools⌄</span>
+    </nav>
+
+    <section class="screen screen-home">
+      <div class="results-column">
+        <div class="ai-overview">✦ AI Overview</div>
+
+        <div class="photo-strip">
+          <div class="photo-card diagram-card">
+            <strong>Process of Photosynthesis</strong>
+            <div class="sun">☀</div>
+            <div class="plant">🌻</div>
+            <small>Water + sunlight → oxygen</small>
+          </div>
+
+          <div class="photo-card leaf-card">
+            <span>☘</span>
+            <small>Chlorophyll absorbs light</small>
+          </div>
+
+          <div class="photo-card sky-card">
+            <span>☀</span>
+            <small>Sunlight</small>
+          </div>
+        </div>
+
+        <p class="answer">
+          Photosynthesis is the
+          <mark>
+            biological process by which plants, algae, and some bacteria
+            convert light energy into chemical energy to fuel their growth.
+          </mark>
+          <span class="source-pill">◉ Wikipedia</span>
+        </p>
+
+        <h2>How It Works</h2>
+      </div>
+
+      <aside class="knowledge-panel">
+        <article>
+          <div>
+            <small>Smithsonian</small>
+            <strong>What is Photosynthesis?</strong>
+            <p>
+              By taking in water through the roots, carbon dioxide from the
+              air, and light...
+            </p>
+          </div>
+          <div class="thumb pale"></div>
+        </article>
+
+        <article>
+          <div>
+            <small>Wikipedia</small>
+            <strong>Photosynthesis - Wikipedia</strong>
+            <p>
+              Photosynthesis is a system of biological processes by which
+              photoautotrophs...
+            </p>
+          </div>
+          <div class="thumb plant-thumb">🌻</div>
+        </article>
+
+        <article>
+          <div>
+            <small>Britannica</small>
+            <strong>
+              Photosynthesis | Definition, Formula, Process and Diagram
+            </strong>
+          </div>
+          <div class="thumb leaf-thumb">☘</div>
+        </article>
+      </aside>
+    </section>
+
+    <section class="screen screen-game">
+      <div class="game-panel">
+        <p>Choose a game you wish to play</p>
+
+        <div class="game-grid">
+          <label for="pacman-rules" class="game-card">
+            <span class="game-art pacman-art">
+              <span class="pacman">●</span>
+              <i></i>
+              <i></i>
+              <i></i>
+            </span>
+            <b>PacMan</b>
+          </label>
+
+          <div class="game-card">
+            <span class="game-art lavender"></span>
+            <b>Game #2</b>
+          </div>
+
+          <div class="game-card">
+            <span class="game-art blue"></span>
+            <b>Game #3</b>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen screen-rules">
+      <div class="pacman-panel rules-panel">
+        <h1>PAC-MAN</h1>
+
+        <div class="rules-card">
+          <h2>Brief rules explanation</h2>
+          <div class="topic">Topic entered: Photosynthesis</div>
+
+          <label for="pacman-explanation" class="button">
+            Start Explanation
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen screen-explanation">
+      <div class="pacman-panel explanation-panel">
+        <div class="explanation-copy">
+          <div class="line">
+            <strong>Brief explanation:</strong>
+            <span class="timer">01:00</span>
+          </div>
+
+          <strong>Explaining more:</strong>
+        </div>
+
+        <div class="explanation-actions">
+          <label for="pacman-explanation" class="button">More Time</label>
+          <label for="gamepage" class="button">Start Game</label>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

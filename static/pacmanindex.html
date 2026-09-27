@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Learning Pac-Man</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='pacman.css') }}"
+    >
+
+</head>
+
+<body>
+
+    <!-- ================================= -->
+    <!-- START SCREEN -->
+    <!-- ================================= -->
+
+    <section id="start-screen">
+
+        <h1>Learning Pac-Man</h1>
+
+        <p>
+            What do you want to learn about?
+        </p>
+
+        <input
+            type="text"
+            id="topic-input"
+            placeholder="Example: derivatives"
+        >
+
+        <button id="start-button">
+            Start Learning
+        </button>
+
+        <p id="start-error"></p>
+
+    </section>
+
+
+    <!-- ================================= -->
+    <!-- LESSON SCREEN -->
+    <!-- ================================= -->
+
+    <section
+        id="lesson-screen"
+        class="hidden"
+    >
+
+        <h1 id="lesson-topic"></h1>
+
+        <div>
+            <h2>What is it?</h2>
+
+            <p id="explanation"></p>
+        </div>
+
+        <div>
+            <h2>Quick Lesson</h2>
+
+            <p id="lesson"></p>
+        </div>
+
+        <button id="start-game-button">
+            I'm Ready!
+        </button>
+
+    </section>
+
+
+    <!-- ================================= -->
+    <!-- PAC-MAN SCREEN -->
+    <!-- ================================= -->
+
+    <section
+        id="game-screen"
+        class="hidden"
+    >
+
+        <canvas id="board"></canvas>
+
+    </section>
+
+
+    <!-- ================================= -->
+    <!-- QUESTION MODAL -->
+    <!-- ================================= -->
+
+    <div
+        id="question-modal"
+        class="hidden"
+    >
+
+        <div class="question-card">
+
+            <h2 id="question-text"></h2>
+
+            <div id="options-container">
+            </div>
+
+            <p id="answer-feedback"></p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- GAME COMPLETE -->
+    <!-- ================================= -->
+
+    <section
+        id="game-over-screen"
+        class="hidden"
+    >
+
+        <h1>Congratulations!</h1>
+
+        <p>
+            You defeated all the ghosts!
+        </p>
+
+        <p id="final-score"></p>
+
+        <button id="restart-button">
+            Play Again
+        </button>
+
+    </section>
+
+
+    <script
+        src="{{ url_for('static', filename='pacman.js') }}"
+    ></script>
+
+</body>
+
+</html>

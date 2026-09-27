@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+venv/
+# Local data and OS files
+database.db
+.DS_Store
+database.db.bak
+
+# Session signing key (created on first run)
+instance/

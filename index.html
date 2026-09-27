@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Photosynthesis - Google Search</title>
+<style>
+:root{
+  --bg:#202124; --panel:#2d2e31; --text:#e8eaed; --sub:#9aa0a6;
+  --blue:#8ab4f8; --border:#3c4043;
+  color-scheme: dark;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+header{padding:16px 24px 0;border-bottom:1px solid var(--border);}
+.top{display:flex;align-items:center;gap:16px;max-width:1000px;}
+.logo{font-size:28px;font-weight:500;}
+.logo span:nth-child(1){color:#4285F4}.logo span:nth-child(2){color:#EA4335}
+.logo span:nth-child(3){color:#FBBC05}.logo span:nth-child(4){color:#4285F4}
+.logo span:nth-child(5){color:#34A853}.logo span:nth-child(6){color:#EA4335}
+.searchbar{flex:1;display:flex;align-items:center;background:var(--panel);border-radius:24px;
+  padding:8px 16px;gap:10px;max-width:600px;}
+.searchbar input{flex:1;background:none;border:none;color:var(--text);font-size:16px;outline:none;}
+.icon{opacity:.8;font-size:16px;cursor:default;}
+.avatar{margin-left:auto;width:32px;height:32px;border-radius:50%;background:#8ab4f8;
+  display:flex;align-items:center;justify-content:center;color:#202124;font-weight:600;font-size:13px;}
+nav{display:flex;gap:24px;margin:14px 0 0;padding-bottom:0;font-size:14px;color:var(--sub);overflow-x:auto;}
+nav .tab{padding:10px 4px;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;}
+nav .tab.active{color:var(--blue);border-color:var(--blue);}
+main{max-width:1000px;margin:0 auto;padding:20px 24px 60px;}
+.view{display:none;}
+.view.active{display:block;}
+.ai-box{background:var(--panel);border-radius:16px;padding:18px 20px;max-width:700px;}
+.ai-title{display:flex;align-items:center;gap:8px;color:var(--blue);font-size:14px;margin-bottom:12px;}
+.thumbs{display:flex;gap:8px;margin-bottom:14px;}
+.thumbs div{width:90px;height:70px;border-radius:8px;background:#4a5a3a;flex-shrink:0}
+.thumbs div:nth-child(2){background:#3a5a4a}.thumbs div:nth-child(3){background:#5a4a3a}
+.ai-box p{font-size:14px;line-height:1.6;color:#c9c9c9;}
+.hl{background:#3b4a63;color:#cfe0ff;padding:1px 2px;border-radius:2px;}
+h3{font-size:16px;margin:18px 0 8px;}
+.gamepanel{background:var(--panel);border-radius:16px;padding:22px;max-width:700px;}
+.gamepanel h2{font-size:16px;font-weight:400;margin:0 0 18px;}
+.cards{display:flex;gap:18px;flex-wrap:wrap;}
+.card{cursor:pointer;text-align:center;background:none;border:none;color:var(--text);font:inherit;}
+.card .sq{width:140px;height:140px;border-radius:14px;margin-bottom:8px;transition:transform .15s;}
+.card:hover .sq{transform:scale(1.03);}
+.card:nth-child(1) .sq{background:#c9c08a}
+.card:nth-child(2) .sq{background:#b38fd6}
+.card:nth-child(3) .sq{background:#8fb4d6}
+.gameArea{max-width:700px;}
+.backbtn{background:none;border:1px solid var(--border);color:var(--text);border-radius:20px;
+  padding:8px 16px;cursor:pointer;font-size:14px;margin-bottom:14px;}
+.scoreline{font-size:14px;color:var(--sub);margin-bottom:8px;}
+canvas{background:#111;border-radius:8px;display:block;max-width:100%;touch-action:none;}
+.mmgrid{display:grid;grid-template-columns:repeat(4,64px);gap:8px;}
+.mmcard{width:64px;height:64px;background:var(--panel);border:1px solid var(--border);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;user-select:none;}
+.mmcard.flip{background:#3b4a63;}
+.mmcard.matched{background:#2f4a34;opacity:.6;cursor:default;}
+.msg{margin-top:10px;font-size:14px;color:var(--blue);min-height:20px;}
+#home{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:20px;}
+#home .logo{font-size:56px;}
+#home .searchbar{max-width:560px;width:100%;padding:12px 20px;}
+#home button.go{background:var(--panel);border:1px solid var(--border);color:var(--text);
+  border-radius:6px;padding:10px 18px;font-size:14px;cursor:pointer;}
+#app{display:none;}
+</style>
+</head>
+<body>
+<div id="home">
+  <div class="logo"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></div>
+  <div class="searchbar">
+    <span class="icon">&#128269;</span>
+    <input id="home-input" placeholder="Search Google" autofocus>
+    <span class="icon">&#127908;</span>
+    <span class="icon">&#128247;</span>
+  </div>
+  <button class="go" id="home-go">Google Search</button>
+</div>
+<div id="app">
+<header>
+  <div class="top">
+    <div class="logo"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></div>
+    <div class="searchbar">
+      <span class="icon">&#128269;</span>
+      <input id="search-input" value="Photosynthesis">
+      <span class="icon">&#127908;</span>
+      <span class="icon">&#128247;</span>
+    </div>
+    <div class="avatar">U</div>
+  </div>
+  <nav>
+    <div class="tab">AI Mode</div>
+    <div class="tab active" id="tab-all">All</div>
+    <div class="tab">Images</div>
+    <div class="tab">News</div>
+    <div class="tab">Videos</div>
+    <div class="tab">Forums</div>
+    <div class="tab" id="tab-game">Game</div>
+    <div class="tab">More</div>
+    <div class="tab">Tools</div>
+  </nav>
+</header>
+
+<main>
+  <div class="view active" id="view-all">
+    <div class="ai-box">
+      <div class="ai-title">&#10022; AI Overview</div>
+      <div class="thumbs"><div></div><div></div><div></div></div>
+      <p id="ai-text">Photosynthesis is <span class="hl">the biological process by which plants, algae, and some bacteria convert light energy into chemical energy</span> to fuel their growth.</p>
+    </div>
+    <h3 id="results-heading">Results for "Photosynthesis"</h3>
+    <p style="font-size:14px;color:#c9c9c9;">Here's what we found. Head to the <b>Game</b> tab above to play something related.</p>
+  </div>
+
+  <div class="view" id="view-game">
+    <div class="gamepanel">
+      <h2>Choose a game you wish to play</h2>
+      <div class="cards">
+        <button class="card" data-game="pacman"><div class="sq"></div>PacMan</button>
+        <button class="card" data-game="tbd"><div class="sq"></div>Game #2</button>
+        <button class="card" data-game="tbd"><div class="sq"></div>Game #3</button>
+      </div>
+      <div class="msg" id="game-select-msg"></div>
+    </div>
+  </div>
+
+  <div class="view gameArea" id="view-pacman">
+    <button class="backbtn" data-back>&#8592; Back to games</button>
+    <div class="scoreline" id="pac-score">Dots left: 0</div>
+    <canvas id="pac-canvas"></canvas>
+    <div class="msg" id="pac-msg">Use arrow keys to move.</div>
+  </div>
+
+  <div class="view gameArea" id="view-snake">
+    <button class="backbtn" data-back>&#8592; Back to games</button>
+    <div class="scoreline" id="snake-score">Score: 0</div>
+    <canvas id="snake-canvas" width="360" height="360"></canvas>
+    <div class="msg" id="snake-msg">Use arrow keys to move.</div>
+  </div>
+
+  <div class="view gameArea" id="view-memory">
+    <button class="backbtn" data-back>&#8592; Back to games</button>
+    <div class="scoreline" id="mm-score">Moves: 0</div>
+    <div class="mmgrid" id="mm-grid"></div>
+    <div class="msg" id="mm-msg"></div>
+  </div>
+</main>
+</div>
+
+<script>
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('tab-all').classList.toggle('active', id==='view-all');
+  document.getElementById('tab-game').classList.toggle('active', id.startsWith('view-game')||id.startsWith('view-pac')||id.startsWith('view-snake')||id.startsWith('view-memory'));
+}
+document.getElementById('tab-all').onclick=()=>showView('view-all');
+document.getElementById('tab-game').onclick=()=>showView('view-game');
+document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>showView('view-game'));
+document.querySelectorAll('.card').forEach(c=>c.onclick=()=>{
+  const g=c.dataset.game;
+  if(g==='tbd'){
+    document.getElementById('game-select-msg').textContent='Coming soon — this game hasn\'t been decided yet.';
+    return;
+  }
+  showView('view-'+g);
+  if(g==='pacman') initPac();
+  if(g==='snake') initSnake();
+  if(g==='memory') initMemory();
+});
+
+document.getElementById('home-go').onclick=goSearch;
+document.getElementById('home-input').addEventListener('keydown',e=>{if(e.key==='Enter')goSearch();});
+document.getElementById('search-input').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    const q=document.getElementById('search-input').value.trim()||'Photosynthesis';
+    document.getElementById('results-heading').textContent='Results for "'+q+'"';
+    showView('view-all');
+  }
+});
+function goSearch(){
+  const q=document.getElementById('home-input').value.trim()||'Photosynthesis';
+  document.getElementById('search-input').value=q;
+  document.getElementById('results-heading').textContent='Results for "'+q+'"';
+  document.getElementById('home').style.display='none';
+  document.getElementById('app').style.display='block';
+  showView('view-all');
+}
+
+/* ---- PACMAN ---- */
+const pacMap=[
+"###############",
+"#......#......#",
+"#.###.#.#.###.#",
+"#.............#",
+"#.###.#.#.###.#",
+"#.....#.......#",
+"###.#.#.#.###.#",
+"#.....#...#...#",
+"#.###.###.#.###",
+"#.............#",
+"###############"];
+let pac,pacCell=28,pacDots,pacGhost,pacDir,pacTimer;
+function pacGrid(){return pacMap.map(r=>r.split(''));}
+function initPac(){
+  const g=pacGrid();
+  pac={x:1,y:1};pacGhost={x:13,y:9};pacDir={x:0,y:0};
+  pacDots=0;g.forEach(row=>row.forEach(c=>{if(c==='.')pacDots++;}));
+  window.pacG=g;
+  const cv=document.getElementById('pac-canvas');
+  cv.width=pacMap[0].length*pacCell; cv.height=pacMap.length*pacCell;
+  document.getElementById('pac-msg').textContent='Use arrow keys to move.';
+  clearInterval(pacTimer);
+  pacTimer=setInterval(pacTick,220);
+  drawPac();
+}
+function pacTick(){
+  let nx=pac.x+pacDir.x, ny=pac.y+pacDir.y;
+  if(window.pacG[ny] && window.pacG[ny][nx]!=='#'){pac.x=nx;pac.y=ny;}
+  if(window.pacG[pac.y][pac.x]==='.'){window.pacG[pac.y][pac.x]=' ';pacDots--;}
+  const opts=[{x:1,y:0},{x:-1,y:0},{x:0,y:1},{x:0,y:-1}].filter(d=>{
+    const gx=pacGhost.x+d.x, gy=pacGhost.y+d.y;
+    return window.pacG[gy] && window.pacG[gy][gx]!=='#';
+  });
+  if(opts.length){const d=opts[Math.floor(Math.random()*opts.length)];pacGhost.x+=d.x;pacGhost.y+=d.y;}
+  document.getElementById('pac-score').textContent='Dots left: '+pacDots;
+  if(pacGhost.x===pac.x&&pacGhost.y===pac.y){
+    document.getElementById('pac-msg').textContent='Caught! Restarting...';
+    clearInterval(pacTimer); setTimeout(initPac,1200);
+  } else if(pacDots===0){
+    document.getElementById('pac-msg').textContent='You win! All dots eaten.';
+    clearInterval(pacTimer);
+  }
+  drawPac();
+}
+function drawPac(){
+  const cv=document.getElementById('pac-canvas'), ctx=cv.getContext('2d');
+  ctx.fillStyle='#111';ctx.fillRect(0,0,cv.width,cv.height);
+  window.pacG.forEach((row,y)=>row.forEach((c,x)=>{
+    if(c==='#'){ctx.fillStyle='#1a3a8f';ctx.fillRect(x*pacCell,y*pacCell,pacCell,pacCell);}
+    else if(c==='.'){ctx.fillStyle='#f5d76e';ctx.beginPath();
+      ctx.arc(x*pacCell+pacCell/2,y*pacCell+pacCell/2,3,0,7);ctx.fill();}
+  }));
+  ctx.fillStyle='#f5d76e';ctx.beginPath();
+  ctx.arc(pac.x*pacCell+pacCell/2,pac.y*pacCell+pacCell/2,pacCell/2-3,0,7);ctx.fill();
+  ctx.fillStyle='#e24b4a';ctx.beginPath();
+  ctx.arc(pacGhost.x*pacCell+pacCell/2,pacGhost.y*pacCell+pacCell/2,pacCell/2-3,0,7);ctx.fill();
+}
+window.addEventListener('keydown',e=>{
+  if(!document.getElementById('view-pacman').classList.contains('active'))return;
+  if(e.key==='ArrowUp')pacDir={x:0,y:-1};
+  if(e.key==='ArrowDown')pacDir={x:0,y:1};
+  if(e.key==='ArrowLeft')pacDir={x:-1,y:0};
+  if(e.key==='ArrowRight')pacDir={x:1,y:0};
+});
+
+/* ---- SNAKE ---- */
+let snake,snakeDir,snakeFood,snakeTimer,snakeScore,snakeCell=20,snakeN=18;
+function initSnake(){
+  snake=[{x:8,y:9},{x:7,y:9},{x:6,y:9}];snakeDir={x:1,y:0};snakeScore=0;
+  placeFood();
+  document.getElementById('snake-msg').textContent='Use arrow keys to move.';
+  document.getElementById('snake-score').textContent='Score: 0';
+  clearInterval(snakeTimer); snakeTimer=setInterval(snakeTick,130);
+  drawSnake();
+}
+function placeFood(){snakeFood={x:Math.floor(Math.random()*snakeN),y:Math.floor(Math.random()*snakeN)};}
+function snakeTick(){
+  const head={x:snake[0].x+snakeDir.x,y:snake[0].y+snakeDir.y};
+  if(head.x<0||head.y<0||head.x>=snakeN||head.y>=snakeN||snake.some(s=>s.x===head.x&&s.y===head.y)){
+    document.getElementById('snake-msg').textContent='Game over! Restarting...';
+    clearInterval(snakeTimer); setTimeout(initSnake,1200); return;
+  }
+  snake.unshift(head);
+  if(head.x===snakeFood.x&&head.y===snakeFood.y){snakeScore++;placeFood();
+    document.getElementById('snake-score').textContent='Score: '+snakeScore;}
+  else snake.pop();
+  drawSnake();
+}
+function drawSnake(){
+  const cv=document.getElementById('snake-canvas'), ctx=cv.getContext('2d');
+  ctx.fillStyle='#111';ctx.fillRect(0,0,cv.width,cv.height);
+  ctx.fillStyle='#e24b4a';ctx.fillRect(snakeFood.x*snakeCell,snakeFood.y*snakeCell,snakeCell-2,snakeCell-2);
+  ctx.fillStyle='#5dcaa5';
+  snake.forEach(s=>ctx.fillRect(s.x*snakeCell,s.y*snakeCell,snakeCell-2,snakeCell-2));
+}
+window.addEventListener('keydown',e=>{
+  if(!document.getElementById('view-snake').classList.contains('active'))return;
+  if(e.key==='ArrowUp'&&snakeDir.y===0)snakeDir={x:0,y:-1};
+  if(e.key==='ArrowDown'&&snakeDir.y===0)snakeDir={x:0,y:1};
+  if(e.key==='ArrowLeft'&&snakeDir.x===0)snakeDir={x:-1,y:0};
+  if(e.key==='ArrowRight'&&snakeDir.x===0)snakeDir={x:1,y:0};
+});
+
+/* ---- MEMORY MATCH ---- */
+let mmFirst=null,mmLock=false,mmMoves=0,mmMatched=0;
+function initMemory(){
+  const icons=['\u2600','\u{1F4A7}','\u{1F331}','\u{1F343}','\u{1F33B}','\u{1F30D}','\u2744','\u{1F525}'];
+  let deck=icons.concat(icons);
+  for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}
+  mmFirst=null;mmLock=false;mmMoves=0;mmMatched=0;
+  document.getElementById('mm-score').textContent='Moves: 0';
+  document.getElementById('mm-msg').textContent='';
+  const grid=document.getElementById('mm-grid'); grid.innerHTML='';
+  deck.forEach((icon,i)=>{
+    const el=document.createElement('div');
+    el.className='mmcard'; el.dataset.icon=icon; el.dataset.i=i;
+    grid.appendChild(el);
+    el.onclick=()=>mmClick(el);
+  });
+}
+function mmClick(el){
+  if(mmLock||el.classList.contains('flip')||el.classList.contains('matched'))return;
+  el.textContent=el.dataset.icon; el.classList.add('flip');
+  if(!mmFirst){mmFirst=el;return;}
+  mmMoves++; document.getElementById('mm-score').textContent='Moves: '+mmMoves;
+  mmLock=true;
+  if(mmFirst.dataset.icon===el.dataset.icon){
+    mmFirst.classList.add('matched'); el.classList.add('matched');
+    mmMatched+=2; mmFirst=null; mmLock=false;
+    if(mmMatched===16) document.getElementById('mm-msg').textContent='You matched all pairs!';
+  } else {
+    setTimeout(()=>{
+      mmFirst.textContent=''; mmFirst.classList.remove('flip');
+      el.textContent=''; el.classList.remove('flip');
+      mmFirst=null; mmLock=false;
+    },700);
+  }
+}
+</script>
+</body>
+</html>

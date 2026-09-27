@@ -1,0 +1,1457 @@
+:root {
+  color-scheme: dark;
+  --page: #202124;
+  --field: #4a4d52;
+  --panel: #3c4043;
+  --panel-alt: #2a2b2e;
+  --text: #f1f3f4;
+  --muted: #9aa0a6;
+  --olive: #a8a58d;
+  --olive-dark: #716f60;
+  --cream: #d2cba3;
+  --button: #3d3f43;
+  --button-hover: #4d4f54;
+  --accent-correct: #3ba55c;
+  --accent-incorrect: #d64545;
+  --pill: #ffffff;
+  --gutter: 124px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--page);
+  color: var(--text);
+  font: 14px Arial, Helvetica, sans-serif;
+}
+
+/* game.js toggles screens with .hidden — it must always win */
+.hidden {
+  display: none !important;
+}
+
+.state-control {
+  position: fixed;
+  opacity: 0;
+  pointer-events: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding-top: 16px;
+}
+
+/* ============================= */
+/* TOP BAR + SEARCH FIELD */
+/* ============================= */
+
+.topbar {
+  min-height: 48px;
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  padding: 0 32px 0 var(--gutter);
+}
+
+.google-wordmark {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.7px;
+  line-height: 44px;
+}
+
+.search-wrap {
+  width: 545px;
+  max-width: 100%;
+}
+
+.search-field {
+  width: 519px;
+  height: 44px;
+  border-radius: 24px;
+  background: var(--field);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 17px 0 22px;
+  box-shadow: 0 1px 2px #1116;
+}
+
+.search-field:focus-within {
+  box-shadow: 0 1px 6px #0009;
+}
+#topic-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 16px;
+}
+
+#topic-input::placeholder {
+  color: #c7c9cc;
+}
+
+.search-actions,
+.account-actions {
+  color: #c7c9cc;
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #c7c9cc;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.icon-button:hover {
+  color: var(--text);
+}
+
+#start-button {
+  font-size: 18px;
+}
+
+.divider {
+  display: block;
+  width: 1px;
+  height: 22px;
+  background: #6d7074;
+}
+
+.account-actions {
+  margin-left: auto;
+  font-size: 18px;
+  gap: 22px;
+  height: 44px;
+}
+
+.avatar {
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #957466;
+  overflow: hidden;
+  font-size: 16px;
+}
+
+/* ============================= */
+/* ACCOUNT MENU (avatar = login / logout) */
+/* ============================= */
+
+.account {
+  position: relative;
+}
+
+#avatar-button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: var(--panel);
+  color: #fff;
+  font-size: 16px;
+}
+
+#avatar-button.signed-in {
+  background: #957466;
+  font-weight: 700;
+}
+
+#avatar-button:hover,
+#avatar-button[aria-expanded="true"] {
+  box-shadow: 0 0 0 4px #ffffff22;
+}
+
+.account-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 50;
+  width: 320px;
+  padding: 24px;
+  border-radius: 28px;
+  background: var(--panel-alt);
+  box-shadow: 0 4px 16px #000a;
+  color: var(--text);
+  font-size: 14px;
+  text-align: center;
+}
+
+.account-menu-title {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+.account-menu-copy {
+  margin: 0 0 14px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+#account-email {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.avatar-large {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 12px;
+  color: #fff;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.account-menu .pill-button {
+  width: 100%;
+  height: 44px;
+  margin: 8px 0 0;
+  font-size: 14px;
+}
+
+#login-error:empty {
+  display: none;
+}
+
+#login-error {
+  margin: 10px 0 0;
+}
+
+/* Only show the "sign in" hint when nobody is signed in */
+.signed-out-note {
+  display: none;
+}
+
+body.signed-out .signed-out-note {
+  display: block;
+}
+
+#start-error {
+  margin: 6px 0 0 22px;
+}
+
+#start-error:empty {
+  display: none;
+}
+
+/* ============================= */
+/* TABS */
+/* ============================= */
+
+.tabs {
+  height: 45px;
+  display: flex;
+  align-items: end;
+  gap: 26px;
+  padding: 0 0 14px var(--gutter);
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.tabs label {
+  cursor: pointer;
+}
+
+.tabs .all-tab,
+.tabs .game-tab {
+  position: relative;
+  color: var(--text);
+}
+
+.tabs .all-tab::after,
+.tabs .game-tab::after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  background: #fff;
+  left: 0;
+  right: 0;
+  bottom: -14px;
+  opacity: 0;
+}
+
+#tab-all:checked ~ .app-shell .all-tab::after,
+#tab-game:checked ~ .app-shell .game-tab::after {
+  opacity: 1;
+}
+
+/* Game tab before a topic has been searched: inert, like the other tabs */
+#tab-game:disabled ~ .app-shell .game-tab {
+  color: var(--muted);
+  cursor: default;
+}
+
+/* All / Game panels inside the start + lesson screens */
+#tab-all:checked ~ .app-shell .tab-panel-game,
+#tab-game:checked ~ .app-shell .tab-panel-all {
+  display: none;
+}
+
+/* ============================= */
+/* SCREENS */
+/* ============================= */
+
+.screens {
+  position: relative;
+  border-top: 1px solid #303134;
+  min-height: calc(100vh - 121px);
+}
+
+/* Exit (×) button: only shown while a Pac-Man game is in progress.
+   Sits above the concept popup (z-index 100) so it always works. */
+.exit-game-button {
+  display: none;
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  z-index: 101;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+body.in-game .exit-game-button {
+  display: flex;
+}
+
+.exit-game-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.exit-game-button:focus-visible {
+  outline: 2px solid #f2c94c;
+  outline-offset: 2px;
+}
+
+/* Arcade-black backdrop while the Pac-Man board is on screen */
+.screens:has(#game-screen:not(.hidden)) {
+  background: #000;
+}
+
+#game-screen .pacman-panel {
+  background: #000;
+}
+
+/* Center the board in the dark area, the same way .popup-overlay
+   centers its card, and keep it fully inside the window. */
+#game-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 121px);
+  padding: 16px;
+}
+
+#game-screen .pacman-panel {
+  padding: 16px 24px 20px;
+}
+
+#game-screen .pacman-panel h1 {
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* Display size only: the canvas keeps its 608x672 drawing size. */
+#game-screen #board {
+  width: auto;
+  max-height: calc(100vh - 245px);
+}
+
+.screen-results {
+  padding: 12px var(--gutter) 48px;
+}
+
+.screen-panel {
+  padding: 18px 6vw 48px calc(var(--gutter) - 9px);
+}
+
+.results-column {
+  max-width: 760px;
+}
+
+.ai-overview {
+  color: #c8d4ff;
+  margin-bottom: 20px;
+}
+
+/* ============================= */
+/* LOGIN FORM (inside the avatar menu) */
+/* ============================= */
+
+#email-input,
+#password-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 20px;
+  margin: 4px 0;
+  border-radius: 24px;
+  border: none;
+  background: var(--field);
+  color: var(--text);
+  font: inherit;
+  font-size: 16px;
+  box-shadow: 0 1px 2px #1116;
+}
+
+#email-input::placeholder,
+#password-input::placeholder {
+  color: #c7c9cc;
+}
+
+#email-input:focus,
+#password-input:focus {
+  outline: none;
+  box-shadow: 0 1px 6px #0009;
+}
+
+/* ============================= */
+/* START SCREEN (empty results) */
+/* ============================= */
+
+.empty-title {
+  font-size: 22px;
+  font-weight: 400;
+  margin: 0 0 8px;
+}
+
+.empty-copy {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0 0 20px;
+}
+
+/* ============================= */
+/* LESSON SCREEN (AI Overview) */
+/* ============================= */
+
+#lesson-topic {
+  font-size: 26px;
+  font-weight: 400;
+  margin: 0 0 16px;
+}
+
+.answer {
+  color: #d8e5ff;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.answer mark {
+  background: #40558c;
+  color: #eaf0ff;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 1px 2px;
+}
+
+.results-column h2 {
+  margin: 30px 0 10px;
+  font-size: 18px;
+}
+
+.lesson-text {
+  color: #bdc1c6;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-line;
+}
+
+.game-hint {
+  margin-top: 30px;
+  color: var(--muted);
+}
+
+.game-hint label {
+  color: #8ab4f8;
+  cursor: pointer;
+}
+
+.game-hint label:hover {
+  text-decoration: underline;
+}
+
+/* ============================= */
+/* GAME PICKER */
+/* ============================= */
+
+.game-panel {
+  max-width: 1172px;
+  border-radius: 55px;
+  background: var(--panel);
+  padding: 40px 50px;
+}
+
+.screen-results .game-panel {
+  margin-left: -9px;
+}
+
+.game-panel > p {
+  margin: 0 0 31px;
+  font-size: 16px;
+}
+
+/* Title on the left, My Progress in the top-right corner */
+.game-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 31px;
+}
+
+.game-panel-header p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.corner-button {
+  min-width: 0;
+  height: 40px;
+  margin: 0;
+  padding: 0 20px;
+  font-size: 14px;
+  background: var(--panel-alt);
+}
+
+.corner-button:hover {
+  background: var(--page);
+}
+
+/* game.js shows the dashboard without hiding the lesson; hide it here */
+.screens:has(#dashboard-screen:not(.hidden)) #lesson-screen {
+  display: none;
+}
+
+/* Game tab (after a search): featured game on the left, what the
+   platform is on the right, split by a thin divider. */
+.games-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 860px) minmax(240px, 1fr);
+  max-width: 1300px;
+}
+
+.games-main {
+  padding-right: 36px;
+}
+
+.games-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 8px 0 18px;
+}
+
+.games-header h2,
+.games-about h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--text);
+}
+
+/* The Pac-Man preview. The artwork keeps its proportions on the
+   game's own black background. */
+.game-feature {
+  position: relative;
+  aspect-ratio: 2 / 1;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #000;
+}
+
+.game-feature-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.game-feature-label {
+  position: absolute;
+  top: 18px;
+  left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-shadow: 0 1px 4px #000;
+}
+
+.game-feature-label strong {
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--text);
+}
+
+.game-feature-label span {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.game-feature-play {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  min-width: 220px;
+  height: 56px;
+  padding: 0 28px;
+  border: none;
+  border-radius: 28px;
+  background: var(--pill);
+  color: var(--page);
+  font-size: 18px;
+  box-shadow: 0 2px 10px #0009;
+  transition: box-shadow 0.15s ease;
+}
+
+.game-feature-play:hover {
+  box-shadow: 0 4px 18px #000c;
+}
+
+.game-feature-play:focus-visible {
+  outline: 2px solid #f2c94c;
+  outline-offset: 3px;
+}
+
+.games-about {
+  border-left: 1px solid #303134;
+  padding: 8px 0 24px 24px;
+}
+
+.games-about p {
+  margin: 18px 0 0;
+  max-width: 420px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #d2d5d8;
+}
+
+/* ============================= */
+/* SHARED PILL BUTTON (modeled on googlelook .button) */
+/* ============================= */
+
+.pill-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 200px;
+  height: 56px;
+  margin: 10px 8px;
+  padding: 0 28px;
+  border: none;
+  border-radius: 28px;
+  background: var(--button);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  transition: background-color 0.15s ease;
+}
+
+.pill-button:hover {
+  background: var(--button-hover);
+}
+
+.screen-results .pill-button {
+  margin-left: 0;
+}
+
+/* ============================= */
+/* PAC-MAN PANELS (game, question, game over) */
+/* ============================= */
+
+.pacman-panel {
+  max-width: 1172px;
+  border-radius: 55px;
+  background: var(--olive-dark);
+  padding: 37px 52px 41px;
+}
+
+.pacman-panel h1 {
+  font-size: 18px;
+  margin: 0 0 24px;
+}
+
+.game-board-panel {
+  text-align: center;
+}
+
+.game-board-panel h1 {
+  text-align: left;
+}
+
+#board {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+  background: #000;
+  border-radius: 16px;
+}
+
+#game-instructions {
+  color: #e6e2cc;
+  font-size: 14px;
+  margin: 16px 0 0;
+}
+
+.center-panel {
+  text-align: center;
+}
+
+.center-panel h1 {
+  font-size: 28px;
+}
+
+#final-score {
+  font-size: 18px;
+  color: #efebd6;
+  margin-bottom: 20px;
+}
+
+/* ============================= */
+/* QUESTION SCREEN */
+/* ============================= */
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  margin-bottom: 24px;
+}
+
+#question-number {
+  font-weight: 700;
+}
+
+/* Boss Ghost: final transfer question */
+
+.boss-question #question-number {
+  color: #f2c94c;
+}
+
+.boss-question .question-card {
+  box-shadow: 0 0 0 3px #f2c94c, 0 0 24px #f2c94c55;
+}
+
+/* Boss Ghost: typed (free-response) answer */
+
+.free-response-hint {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #5f6368;
+}
+
+.free-response-input {
+  display: block;
+  width: 100%;
+  min-height: 110px;
+  padding: 14px 18px;
+  border: 2px solid #b7b18d;
+  border-radius: 20px;
+  background: #fbf8ea;
+  color: #303134;
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.free-response-input:focus {
+  outline: none;
+  border-color: #c99a2e;
+}
+
+.option-button.free-response-submit {
+  text-align: center;
+}
+
+#game-instructions.boss-alert {
+  color: #f2c94c;
+  font-weight: 700;
+}
+
+#score {
+  background: var(--pill);
+  color: #303134;
+  border-radius: 29px;
+  padding: 12px 24px;
+  font-weight: 700;
+}
+
+.question-card {
+  background: var(--cream);
+  color: #303134;
+  border-radius: 30px;
+  padding: 36px 41px;
+}
+
+#question-text {
+  font-size: 22px;
+  margin: 0 0 24px;
+}
+
+.option-button {
+  display: block;
+  width: 100%;
+  min-height: 56px;
+  margin: 12px 0;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 28px;
+  background: #b7b18d;
+  color: #303134;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+  transition: background-color 0.15s ease;
+}
+
+.option-button:hover:not(:disabled) {
+  background: #a9a37f;
+}
+
+.option-button:disabled {
+  cursor: default;
+}
+
+.option-button.correct {
+  background: var(--accent-correct);
+  color: #fff;
+}
+
+.option-button.incorrect {
+  background: var(--accent-incorrect);
+  color: #fff;
+}
+
+#answer-feedback {
+  font-size: 16px;
+  min-height: 24px;
+  margin: 18px 0 0;
+}
+
+/* ============================= */
+/* CONCEPT EXPLANATION POPUP */
+/* ============================= */
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+
+.popup-card {
+  background: var(--panel);
+  border-radius: 30px;
+  padding: 32px;
+  max-width: 520px;
+  width: 100%;
+}
+
+.popup-card h3 {
+  margin-top: 0;
+  color: #c8d4ff;
+}
+
+.popup-card p {
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+.popup-card .pill-button {
+  margin: 8px 0 0;
+}
+
+#retry-after-explanation {
+  background: var(--accent-correct);
+}
+
+#retry-after-explanation:hover {
+  background: #2f8a4a;
+}
+
+/* Game Over popup: same colors as Try Again and My Progress */
+#game-over-continue,
+#maze-cleared-play-again {
+  background: var(--accent-correct);
+}
+
+#game-over-continue:hover,
+#maze-cleared-play-again:hover {
+  background: #2f8a4a;
+}
+
+#game-over-progress,
+#maze-cleared-progress {
+  background: var(--panel-alt);
+}
+
+#game-over-progress:hover,
+#maze-cleared-progress:hover {
+  background: var(--page);
+}
+
+/* ============================= */
+/* REPORT + DASHBOARD */
+/* ============================= */
+
+#report-screen h1,
+#dashboard-screen h1 {
+  font-size: 20px;
+  margin: 0 0 20px;
+}
+
+.report-card {
+  background: var(--panel-alt);
+  border-radius: 30px;
+  padding: 28px 32px;
+  margin-bottom: 16px;
+}
+
+#report-topic {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.mastery-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.overall-row {
+  font-weight: 700;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #444;
+}
+
+.mastery-label {
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mastery-bar-track {
+  background: var(--panel);
+  border-radius: 6px;
+  height: 22px;
+}
+
+.mastery-fill {
+  background: var(--pill);
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  min-width: 2px;
+}
+
+.mastery-fill-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #202124;
+  white-space: nowrap;
+}
+
+.recommendation {
+  margin-top: 20px;
+  padding: 16px 20px;
+  border-radius: 20px;
+  background: #40558c;
+}
+
+.recommendation h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+}
+
+.recommendation p {
+  margin: 0;
+}
+
+.bar-chart {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.bar-chart-y-title {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-weight: bold;
+  font-size: 0.85rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.bar-chart-plot {
+  flex: 1;
+  min-width: 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.bar-row-label {
+  width: 140px;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  text-align: right;
+  color: #d2d5d8;
+}
+
+.bar-track {
+  position: relative;
+  flex: 1;
+  background: var(--panel);
+  border-radius: 4px;
+  height: 22px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  background: var(--accent-correct);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+  min-width: 24px;
+}
+
+.bar-fill-label {
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.bar-axis-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.bar-axis-ticks {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.bar-chart-x-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.85rem;
+  margin-top: 6px;
+  color: var(--muted);
+}
+
+.topic-card {
+  background: var(--panel-alt);
+  border-radius: 20px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.topic-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 18px 24px;
+  border: none;
+  background: none;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.topic-header:hover {
+  background: #34363a;
+}
+
+.topic-concepts {
+  padding: 0 24px 12px;
+}
+
+/* Mastery bars are colored by band (see masteryBand() in game.js) */
+
+.bar-fill.mastery-low {
+  background: #c5504b;
+}
+
+.bar-fill.mastery-mid {
+  background: #e0b33c;
+}
+
+.bar-fill.mastery-mid .bar-fill-label {
+  color: #202124;
+}
+
+.bar-fill.mastery-high {
+  background: var(--accent-correct);
+}
+
+/* Bar extras: "not practiced", start-of-game marker, change, details */
+
+.bar-empty-note {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-left: 10px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.bar-start {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--text);
+  opacity: 0.8;
+}
+
+.bar-row-change {
+  width: 44px;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.bar-row-meta {
+  margin: -6px 0 12px 150px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.chart-note,
+.report-summary,
+.topic-stats {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0 0 14px;
+}
+
+/* ============================= */
+/* LEARNING MAP (lesson screen) */
+/* ============================= */
+
+.map-intro {
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+
+.concept-map {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  counter-reset: concept;
+}
+
+.concept-node {
+  counter-increment: concept;
+  position: relative;
+  background: var(--panel-alt);
+  border-radius: 16px;
+  padding: 14px 18px 6px 56px;
+}
+
+/* Step number: the list is in learning order */
+.concept-node::before {
+  content: counter(concept);
+  position: absolute;
+  left: 16px;
+  top: 14px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #40558c;
+  color: #eaf0ff;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.concept-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.concept-name {
+  font-size: 15px;
+}
+
+.concept-level {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+.level-1 {
+  background: #1e3a2a;
+  color: #81c995;
+}
+
+.level-2 {
+  background: #3d3417;
+  color: #fdd663;
+}
+
+.level-3 {
+  background: #3f2321;
+  color: #f28b82;
+}
+
+.concept-objective {
+  color: #d2d5d8;
+  margin: 0 0 4px;
+  line-height: 1.5;
+}
+
+.concept-prereqs {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0 0 4px;
+}
+
+.concept-node .bar-row {
+  margin-top: 8px;
+}
+
+.concept-node .bar-row-label {
+  width: auto;
+  text-align: left;
+  color: var(--muted);
+}
+
+/* ============================= */
+/* STRUGGLES (My Progress) */
+/* ============================= */
+
+.struggles {
+  background: #3f2321;
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+}
+
+.struggles h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: #f28b82;
+}
+
+.struggles ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.struggles li {
+  margin: 4px 0;
+}
+
+.struggle-misconception {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.struggles-none {
+  background: #1e3a2a;
+}
+
+.struggles-none p {
+  margin: 0;
+  color: #81c995;
+}
+
+@media (max-width: 600px) {
+  .bar-row-meta {
+    margin-left: 0;
+  }
+}
+
+/* ============================= */
+/* ERRORS */
+/* ============================= */
+
+.error {
+  color: #ff6b6b;
+  font-size: 14px;
+  min-height: 18px;
+}
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 1200px) {
+  :root {
+    --gutter: 32px;
+  }
+
+  .games-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .games-main {
+    padding-right: 0;
+  }
+
+  .games-about {
+    border-left: none;
+    border-top: 1px solid #303134;
+    margin-top: 28px;
+    padding: 20px 0 0;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --gutter: 16px;
+  }
+
+  .topbar {
+    gap: 12px;
+    padding-right: 16px;
+  }
+
+  .google-wordmark {
+    font-size: 17px;
+  }
+
+  .search-wrap {
+    flex: 1;
+    width: auto;
+  }
+
+  .search-actions > span {
+    display: none;
+  }
+
+  /* keep the avatar (login/logout) on phones, drop the decorative icons */
+  .account-actions > span {
+    display: none;
+  }
+
+  .account-menu {
+    width: min(320px, calc(100vw - 32px));
+  }
+
+  .tabs {
+    overflow-x: auto;
+    gap: 20px;
+    padding-right: 16px;
+  }
+
+  .screen-panel {
+    padding: 16px;
+  }
+
+  .screen-results .game-panel {
+    margin-left: 0;
+  }
+
+  .game-panel,
+  .pacman-panel {
+    border-radius: 28px;
+    padding: 28px 20px;
+  }
+
+  .game-feature {
+    aspect-ratio: 4 / 3;
+  }
+
+  .game-feature-play {
+    min-width: 160px;
+    height: 48px;
+    font-size: 16px;
+  }
+
+  .question-card {
+    padding: 24px;
+  }
+
+  .mastery-row {
+    grid-template-columns: 100px 1fr;
+  }
+
+  .bar-row-label {
+    width: 90px;
+  }
+}
