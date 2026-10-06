@@ -696,25 +696,25 @@ async function startPacmanGame() {
 // ============================================================
 function loadImages() {
     wallImage = new Image();
-    wallImage.src ="/static/wall.png";
+    wallImage.src ="/static/images/wall.png";
     blueGhostImage = new Image();
-    blueGhostImage.src = "/static/blueGhost.png";
+    blueGhostImage.src = "/static/images/blueGhost.png";
     orangeGhostImage = new Image();
-    orangeGhostImage.src = "/static/orangeGhost.png";
+    orangeGhostImage.src = "/static/images/orangeGhost.png";
     pinkGhostImage = new Image();
-    pinkGhostImage.src ="/static/pinkGhost.png";
+    pinkGhostImage.src ="/static/images/pinkGhost.png";
     redGhostImage = new Image();
-    redGhostImage.src = "/static/redGhost.png";
+    redGhostImage.src = "/static/images/redGhost.png";
     pacmanUpImage = new Image();
-    pacmanUpImage.src ="/static/pacmanUp.png";
+    pacmanUpImage.src ="/static/images/pacmanUp.png";
     pacmanDownImage = new Image();
-    pacmanDownImage.src = "/static/pacmanDown.png";
+    pacmanDownImage.src = "/static/images/pacmanDown.png";
     pacmanLeftImage = new Image();
-    pacmanLeftImage.src = "/static/pacmanLeft.png";
+    pacmanLeftImage.src = "/static/images/pacmanLeft.png";
     pacmanRightImage = new Image();
-    pacmanRightImage.src = "/static/pacmanRight.png";
+    pacmanRightImage.src = "/static/images/pacmanRight.png";
     scaredGhostImage = new Image();
-    scaredGhostImage.src = "/static/scaredGhost.png";
+    scaredGhostImage.src = "/static/images/scaredGhost.png";
 
 }
 

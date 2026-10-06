@@ -176,15 +176,21 @@ Question difficulty adapts to each student, concept by concept. It uses the exis
 
 **Requirements:** Python 3 (tested with 3.13 and 3.14) and a Gemini API key.
 
-1. **Install dependencies:**
+1. **Create and activate a virtual environment:**
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   ```
+   On Windows, activate it with `.venv\Scripts\activate`. Activate it again in each new terminal before running the app.
+2. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
-2. **Add your Gemini API key** to a `.env` file in the project folder:
+3. **Add your Gemini API key** to a `.env` file in the project folder:
    ```text
    GEMINI_API_KEY=your-key-here
    ```
-3. **Create the database and start the server:**
+4. **Create the database and start the server:**
    ```bash
    python app.py
    ```
@@ -215,13 +221,12 @@ Games in progress are held in server memory. Restarting the server, including th
 | `templates/index.html` | The single-page UI: search, lesson, Game tab, game, popups, report, My Progress |
 | `static/game.js` | Frontend logic: search, Pac-Man (canvas), questions, checkpoint, Boss, report, dashboard |
 | `static/style.css` | Styles (dark palette) |
-| `static/*.png`, `static/pacman-game-icon.jpg` | Sprites and the Game tab artwork |
+| `static/images/` | Sprites and the Game tab artwork |
 
 The following are not used by the running app:
-- `static/pacman.js`, `static/pacmanindex.html`, `static/pacman.css`: the original standalone Pac-Man game.
-- `static/pacman-game-icon.png`: an older version of the Game tab artwork.
+- `static/pacman.css`: left over from the original standalone Pac-Man game.
+- `static/images/pacman-game-icon.png`: an older version of the Game tab artwork.
 - `figmagoogle/` and the root `index.html`: design mockups.
-- `Project-1/`: an older copy of `gemini_api.py`.
 
 ---
 
