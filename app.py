@@ -35,16 +35,6 @@ from student_model import (
 
 app = Flask(__name__, instance_relative_config=True)
 
-
-# ============================================================
-# SESSION COOKIE
-# ============================================================
-#
-# The signed-in user is kept in Flask's signed session cookie, so the
-# server never trusts a user_id sent by the browser. The signing key
-# comes from FLASK_SECRET_KEY, or is created once and kept in
-# instance/secret_key (ignored by git).
-
 def load_secret_key():
     key = os.getenv("FLASK_SECRET_KEY")
 
@@ -68,9 +58,6 @@ app.config.update(
     SESSION_COOKIE_SAMESITE="Lax"
 )
 
-# Active games, keyed by game_id. Answers are saved to the database as
-# they happen; only the question queue lives here. Each game has a lock
-# so two requests for the same game can't grade the same question twice.
 games = {}
 
 
@@ -98,18 +85,12 @@ def get_own_game(game_id):
     return game
 
 
-# ============================================================
-# HOME
-# ============================================================
 
 @app.route("/")
 def home():
 
     return render_template("index.html")
 
-# ============================================================
-# USER LOGIN / CREATE ACCOUNT
-# ============================================================
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -189,11 +170,6 @@ def me():
     return jsonify({
         "email": session.get("email")
     })
-
-# ============================================================
-# GENERATE LESSON (concept map + lesson)
-# ============================================================
-
 @app.route("/generate-lesson", methods=["POST"])
 @login_required
 def generate_lesson():
@@ -211,9 +187,6 @@ def generate_lesson():
         return jsonify({
             "error": "Topic is required."
         }), 400
-
-    # Reuses the saved package if this topic has been searched before;
-    # otherwise Gemini generates the concept map, lesson and questions.
     topic_id = find_or_create_topic(topic)
 
     if not topic_id:
@@ -257,9 +230,6 @@ def concept_map(concepts, model):
 # START GAME
 # ============================================================
 
-# ============================================================
-# ADAPTIVE QUESTIONS
-# ============================================================
 
 def normalized(question):
     return question["question"].strip().lower()
@@ -302,8 +272,6 @@ def adaptive_questions(user_id, topic_id, topic_title, concept_ids,
             )
         ]
 
-    # Every multiple-choice question but the Boss's (the package's
-    # transfer question, which is answered in free text).
     saved = [
         q for source, q in every
         if not (source == "package" and q["question_type"] == "transfer")
@@ -349,8 +317,6 @@ def adaptive_questions(user_id, topic_id, topic_title, concept_ids,
 
     def write(item):
         _, concept_id, difficulty, familiarity = item
-
-        # Everything already written on this concept, so it's new.
         avoid = sorted({
             normalized(q) for _, q in every if q["concept_id"] == concept_id
         })

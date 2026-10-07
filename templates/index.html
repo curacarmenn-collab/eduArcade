@@ -4,219 +4,341 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduArcade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
+<!-- game.js still sets these (Game tab state); they have no visible UI. -->
 <input class="state-control" type="radio" name="tab" id="tab-all" checked>
 <input class="state-control" type="radio" name="tab" id="tab-game" disabled>
 
-<div class="app-shell">
-    <header class="topbar">
-        <div class="google-wordmark">EduArcade</div>
+<div class="arcade-shell">
+    <div class="scanlines" aria-hidden="true"></div>
 
-        <div class="search-wrap">
-            <div class="search-field">
-                <input type="text" id="topic-input" placeholder="Search..." autocomplete="off">
-                <div class="search-actions">
-                    <button type="button" id="clear-topic" class="icon-button" aria-label="Clear">×</button>
-                    <span class="divider"></span>
-                    <span>♩</span>
-                    <span>◉</span>
-                    <button type="button" id="start-button" class="icon-button" aria-label="Search">⌕</button>
-                </div>
+    <header class="site-header">
+        <button type="button" id="brand-button" class="brand" aria-label="EduArcade home">
+            <span class="brand-puck"></span>
+            <span>EDUARCADE</span>
+        </button>
+        <div class="header-actions">
+            <div class="header-meta">
+                <button type="button" id="dashboard-button" class="meta-link">MY PROGRESS</button>
+                <span class="online signed-in-only"><i></i> ONLINE</span>
             </div>
-            <p id="start-error" class="error"></p>
-        </div>
-
-        <div class="account-actions">
-            <span>↗</span>
-            <span>⠿</span>
-
-            <div class="account">
-                <button type="button" id="avatar-button" class="avatar" aria-label="Account" aria-haspopup="true" aria-expanded="false">👤</button>
-                <div id="login-screen" class="account-menu hidden">
-                    <p class="account-menu-title">Sign in</p>
-                    <p class="account-menu-copy">Use your email and a password to save your learning progress. New here? Pick a password to create your account.</p>
-                    <input type="email" id="email-input" placeholder="Enter your email" autocomplete="email">
-                    <input type="password" id="password-input" placeholder="Enter your password" autocomplete="current-password">
-                    <button id="login-button" class="pill-button">Continue</button>
-                    <p id="login-error" class="error"></p>
-                </div>
-                <div id="account-menu" class="account-menu hidden">
-                    <div id="account-menu-avatar" class="avatar avatar-large"></div>
-                    <p class="account-menu-title">Signed in as</p>
-                    <p id="account-email" class="account-menu-copy"></p>
-                    <button type="button" id="account-progress-button" class="pill-button">My Progress</button>
-                    <button type="button" id="logout-button" class="pill-button">Sign out</button>
-                </div>
-            </div>
+            <button type="button" id="avatar-button" class="login-trigger" aria-haspopup="dialog" aria-expanded="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4.5 21c.8-4.2 3.3-6.3 7.5-6.3s6.7 2.1 7.5 6.3" />
+                </svg>
+                <span id="avatar-label">LOG IN</span>
+            </button>
         </div>
     </header>
 
-    <nav class="tabs">
-        <label for="tab-all">AI Mode</label>
-        <label for="tab-all" class="all-tab">All</label>
-        <span>Images</span>
-        <span>News</span>
-        <span>Videos</span>
-        <span>Forums</span>
-        <label for="tab-game" class="game-tab">Game</label>
-        <span>More⌄</span>
-        <span>Tools⌄</span>
-    </nav>
-
     <main class="screens">
-        <button type="button" id="exit-game-button" class="exit-game-button" aria-label="Exit game" title="Exit game">×</button>
-        <div id="start-screen" class="screen screen-results">
-            <div class="tab-panel-all">
-                <div class="ai-overview">✦ AI Overview</div>
-                <h2 class="empty-title">What do you want to learn?</h2>
-                <p class="empty-copy">Type any topic in the search bar and press Enter. We'll create a learning game for you.</p>
-                <p class="empty-copy signed-out-note">Sign in with the account icon in the top-right corner to save your progress.</p>
+
+        <!-- ================= HOME PAGE ================= -->
+        <div class="home-page">
+            <section class="hero" aria-labelledby="hero-title">
+                <div class="hero-kicker"><span>●</span> LEARN ANYTHING. THEN PLAY IT.</div>
+                <h1 id="hero-title">WHAT DO YOU WANT<br><em>TO LEARN TODAY?</em></h1>
+                <p>Search any topic. Get a short AI lesson. Beat the ghosts to prove you know it.</p>
+                <div class="search">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="10.8" cy="10.8" r="6.8" />
+                        <path d="m16 16 5 5" />
+                    </svg>
+                    <input type="text" id="topic-input" placeholder="Search any topic: photosynthesis, fractions, Python loops..." autocomplete="off" aria-label="Search a topic to learn">
+                    <button type="button" id="start-button">SEARCH <span>↵</span></button>
+                </div>
+                <p id="start-error" class="error"></p>
+                <div class="quick-search">
+                    <span>TRY:</span>
+                    <button type="button" data-topic="Photosynthesis">PHOTOSYNTHESIS</button>
+                    <button type="button" data-topic="Python loops">PYTHON LOOPS</button>
+                    <button type="button" data-topic="Fractions">FRACTIONS</button>
+                    <button type="button" data-topic="The water cycle">WATER CYCLE</button>
+                </div>
+            </section>
+
+            <div id="start-screen" class="start-screen">
+                <p class="signed-out-note">Log in with the <strong>LOG IN</strong> button in the top-right corner to save your progress.</p>
             </div>
 
-            <div class="tab-panel-game">
-                <div class="game-panel">
-                    <div class="game-panel-header">
-                        <p>Search a topic first, then choose a game to play.</p>
-                        <button type="button" id="dashboard-proxy-button" class="pill-button corner-button">My Progress</button>
+            <section id="lesson-screen" class="content-section lesson hidden" aria-labelledby="lesson-topic">
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">✦ AI LESSON</span>
+                        <h2 id="lesson-topic"></h2>
+                    </div>
+                    <span>04 CONCEPTS</span>
+                </div>
+
+                <div class="lesson-grid">
+                    <div class="lesson-copy">
+                        <p class="answer"><mark id="explanation"></mark></p>
+                        <h3>HOW IT WORKS</h3>
+                        <p id="lesson" class="lesson-text"></p>
+                    </div>
+                    <div class="lesson-map">
+                        <h3>LEARNING MAP</h3>
+                        <p class="map-intro">The four concepts in this topic, in the order to learn them. Each ghost in the game tests one, then a Boss Ghost asks you to apply them to something new.</p>
+                        <ol id="concept-map" class="concept-map"></ol>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div id="lesson-screen" class="screen screen-results hidden">
-            <div class="tab-panel-all results-column">
-                <div class="ai-overview">✦ AI Overview</div>
-                <h1 id="lesson-topic"></h1>
 
-                <p class="answer">
-                    <mark id="explanation"></mark>
-                </p>
+                <p class="game-hint">Ready to practice? Pick <button type="button" id="go-to-floor" class="link-button">PAC-MAN</button> on the arcade floor below.</p>
+            </section>
 
-                <h2>How It Works</h2>
-                <p id="lesson" class="lesson-text"></p>
-
-                <h2>Learning Map</h2>
-                <p class="map-intro">The four concepts in this topic, in the order to learn them. Each ghost in the game tests one, then a Boss Ghost asks you to apply them to something new.</p>
-                <ol id="concept-map" class="concept-map"></ol>
-
-                <p class="game-hint">Ready to practice? Open the <label for="tab-game">Game</label> tab.</p>
-            </div>
-
-            <div class="tab-panel-game">
-                <div class="games-layout">
-                    <section class="games-main">
-                        <div class="games-header">
-                            <h2>EduArcade Games</h2>
-                            <button type="button" id="dashboard-button" class="pill-button corner-button">My Progress</button>
-                        </div>
-
-                        <div class="game-feature">
-                            <img class="game-feature-art" src="{{ url_for('static', filename='images/pacman-game-icon.jpg') }}" alt="">
-                            <div class="game-feature-label">
-                                <strong>Pac-Man</strong>
-                                <span>Learning</span>
-                            </div>
-                            <button id="start-quiz-button" class="game-feature-play" type="button">Play</button>
-                        </div>
-                    </section>
-
-                    <aside class="games-about">
-                        <h2>Learning with EduArcade</h2>
-                        <p><strong>EduArcade</strong> is an AI-powered adaptive learning engine that turns mistake-driven retrieval practice into an arcade game. A student searches for a topic, receives a short AI-generated lesson broken into key concepts, and then reinforces those concepts through Pac-Man gameplay. As the student encounters ghosts, they answer questions related to what they learned.</p>
-                        <p>The program is helpful because it turns <strong>passive studying into active practice</strong>. Instead of simply reading information, students have to recall and apply concepts while playing. The system also tracks performance at the <strong>individual concept level</strong>, so it can identify areas where a student is struggling, explain mistakes, and show how their understanding changes over time.</p>
-                    </aside>
-                </div>
-            </div>
-        </div>
-        <div id="game-screen" class="screen screen-panel hidden">
-            <div class="pacman-panel game-board-panel">
-                <h1>PAC-MAN</h1>
-                <canvas id="board"></canvas>
-                <p id="game-instructions">Use the arrow keys or WASD to move and avoid the ghosts. If a ghost catches you, answer a question to keep learning. Eat a Power Pellet to turn ghosts blue, then eat them for points.</p>
-            </div>
-        </div>
-        <div id="question-screen" class="screen screen-panel hidden">
-            <div class="pacman-panel">
-                <div class="game-header">
-                    <span id="question-number"></span>
-                    <span id="score">Score: 0</span>
-                </div>
-                <div class="question-card">
-                    <h2 id="question-text"></h2>
-                    <div id="options-container"></div>
-                </div>
-                <p id="answer-feedback"></p>
-            </div>
-        </div>
-        <div id="game-over-screen" class="screen screen-panel hidden">
-            <div class="pacman-panel center-panel">
-                <h1>Quest Complete!</h1>
-                <p id="final-score"></p>
-                <button id="view-report-button" class="pill-button">View Learning Report</button>
-                <button id="restart-button" class="pill-button">Play Again</button>
-            </div>
-        </div>
-        <div id="report-screen" class="screen screen-panel hidden">
-            <div class="game-panel">
-                <h1>Learning Report</h1>
-                <div class="report-card">
-                    <h2 id="report-topic"></h2>
-                    <div class="mastery-row overall-row">
-                        <span class="mastery-label">Correct this game</span>
-                        <div class="mastery-bar-track">
-                            <div id="report-overall-fill" class="mastery-fill"></div>
-                        </div>
-                    </div>
-                    <p id="report-summary" class="report-summary"></p>
-                    <div id="report-concepts"></div>
-                    <div id="report-recommendation" class="recommendation hidden">
-                        <h3>🔎 Recommended Review</h3>
-                        <p id="report-recommendation-text"></p>
+            <section id="dashboard-screen" class="content-section hidden" aria-labelledby="dashboard-title">
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">PLAYER STATS</span>
+                        <h2 id="dashboard-title">MY PROGRESS</h2>
                     </div>
                 </div>
-                <button id="report-restart-button" class="pill-button">Play Again</button>
-                <button id="report-continue-button" class="pill-button">Back to Start</button>
-            </div>
-        </div>
-
-        <div id="dashboard-screen" class="screen screen-panel hidden">
-            <div class="game-panel">
-                <h1>My Progress</h1>
                 <div id="dashboard-topics"></div>
-                <button id="dashboard-back-button" class="pill-button">Back</button>
+                <button id="dashboard-back-button" class="arcade-button secondary">BACK</button>
+            </section>
+
+            <section id="arcade-floor" class="library" aria-labelledby="library-title">
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">SELECT A CABINET</span>
+                        <h2 id="library-title">ARCADE FLOOR</h2>
+                    </div>
+                    <span>01 / 04 PLAYABLE</span>
+                </div>
+                <div class="game-grid">
+                    <button type="button" id="start-quiz-button" class="game-card game-yellow active">
+                        <span class="game-art">
+                            <span class="pac-mark" aria-hidden="true"><span></span></span>
+                            <span class="now-playing">PLAY</span>
+                        </span>
+                        <span class="game-card-copy">
+                            <strong>PAC-MAN</strong>
+                            <span>MAZE · LEARNING</span>
+                        </span>
+                        <span class="card-arrow">↗</span>
+                    </button>
+
+                    <div class="game-card game-cyan locked" aria-disabled="true">
+                        <span class="game-art">
+                            <svg class="game-mark-svg" viewBox="0 0 48 48" aria-hidden="true">
+                                <path d="M24 5 38 39 24 33 10 39Z" />
+                                <path d="m17 29 7-16 7 16-7-3Z" class="mark-cut" />
+                            </svg>
+                            <span class="coming-soon-tag">COMING SOON</span>
+                        </span>
+                        <span class="game-card-copy">
+                            <strong>GALAGA</strong>
+                            <span>SHOOTER</span>
+                        </span>
+                    </div>
+
+                    <div class="game-card game-pink locked" aria-disabled="true">
+                        <span class="game-art">
+                            <span class="block-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                            <span class="coming-soon-tag">COMING SOON</span>
+                        </span>
+                        <span class="game-card-copy">
+                            <strong>TETRIS</strong>
+                            <span>PUZZLE</span>
+                        </span>
+                    </div>
+
+                    <div class="game-card game-green locked" aria-disabled="true">
+                        <span class="game-art">
+                            <svg class="game-mark-svg" viewBox="0 0 48 48" aria-hidden="true">
+                                <circle cx="14" cy="15" r="7" />
+                                <circle cx="34" cy="15" r="7" />
+                                <path d="M8 22c3 18 29 18 32 0L24 16Z" />
+                                <circle class="mark-cut" cx="14" cy="14" r="2" />
+                                <circle class="mark-cut" cx="34" cy="14" r="2" />
+                            </svg>
+                            <span class="coming-soon-tag">COMING SOON</span>
+                        </span>
+                        <span class="game-card-copy">
+                            <strong>FROGGER</strong>
+                            <span>ACTION</span>
+                        </span>
+                    </div>
+                </div>
+                <p id="floor-message" class="floor-message"></p>
+            </section>
+        </div>
+
+        <!-- ================= PAC-MAN PAGE (#pacman) ================= -->
+        <div class="game-page">
+            <button type="button" id="exit-game-button" class="back-to-floor" aria-label="Exit game">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7" /></svg>
+                BACK TO ARCADE FLOOR
+            </button>
+
+            <div id="game-screen" class="hidden">
+                <div class="game-page-intro">
+                    <span class="eyebrow">NOW PLAYING / <span id="game-topic"></span></span>
+                    <h1>READY, PLAYER ONE?</h1>
+                    <p>Clear the maze, dodge the ghosts, and prove what you learned.</p>
+                </div>
+                <section class="cabinet-section" aria-labelledby="cabinet-title">
+                    <div class="cabinet-topline">
+                        <div>
+                            <span class="eyebrow">CABINET 01 / MAZE</span>
+                            <h2 id="cabinet-title">PAC-MAN</h2>
+                        </div>
+                        <div class="cabinet-status"><span class="live-dot"></span>1 PLAYER</div>
+                    </div>
+
+                    <div class="cabinet">
+                        <div class="cabinet-speaker" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                        <div class="screen-bezel">
+                            <div class="crt">
+                                <canvas id="board"></canvas>
+                            </div>
+                        </div>
+                        <div class="control-deck">
+                            <div class="deck-label">
+                                <span>MOVE</span>
+                                <small>ARROW KEYS / WASD</small>
+                            </div>
+                            <div class="dpad" aria-label="Pac-Man movement controls">
+                                <button type="button" data-code="ArrowUp" aria-label="Move up"><svg viewBox="0 0 24 24" aria-hidden="true" style="transform: rotate(90deg)"><path d="m14.5 5-7 7 7 7" /></svg></button>
+                                <button type="button" data-code="ArrowLeft" aria-label="Move left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7" /></svg></button>
+                                <span class="dpad-center"></span>
+                                <button type="button" data-code="ArrowRight" aria-label="Move right"><svg viewBox="0 0 24 24" aria-hidden="true" style="transform: rotate(180deg)"><path d="m14.5 5-7 7 7 7" /></svg></button>
+                                <button type="button" data-code="ArrowDown" aria-label="Move down"><svg viewBox="0 0 24 24" aria-hidden="true" style="transform: rotate(270deg)"><path d="m14.5 5-7 7 7 7" /></svg></button>
+                            </div>
+                            <span class="deck-coin" aria-hidden="true"><span></span>INSERT COIN</span>
+                        </div>
+                    </div>
+                    <p id="game-instructions" class="keyboard-tip">Use the arrow keys or WASD to move and avoid the ghosts. If a ghost catches you, answer a question to keep learning. Eat a Power Pellet to turn ghosts blue, then eat them for points.</p>
+                </section>
+            </div>
+
+            <div id="question-screen" class="game-panel-wrap hidden">
+                <section class="arcade-panel">
+                    <div class="game-header">
+                        <span id="question-number"></span>
+                        <span id="score">Score: 0</span>
+                    </div>
+                    <div class="question-card">
+                        <h2 id="question-text"></h2>
+                        <div id="options-container"></div>
+                    </div>
+                    <p id="answer-feedback"></p>
+                </section>
+            </div>
+
+            <div id="game-over-screen" class="game-panel-wrap hidden">
+                <section class="arcade-panel center-panel">
+                    <span class="eyebrow">GAME COMPLETE</span>
+                    <h1>QUEST COMPLETE!</h1>
+                    <p id="final-score"></p>
+                    <button id="view-report-button" class="arcade-button">VIEW LEARNING REPORT</button>
+                    <button id="restart-button" class="arcade-button secondary">PLAY AGAIN</button>
+                </section>
+            </div>
+
+            <div id="report-screen" class="game-panel-wrap hidden">
+                <section class="arcade-panel">
+                    <span class="eyebrow">AFTER-ACTION REPORT</span>
+                    <h1>LEARNING REPORT</h1>
+                    <div class="report-card">
+                        <h2 id="report-topic"></h2>
+                        <div class="mastery-row overall-row">
+                            <span class="mastery-label">Correct this game</span>
+                            <div class="mastery-bar-track">
+                                <div id="report-overall-fill" class="mastery-fill"></div>
+                            </div>
+                        </div>
+                        <p id="report-summary" class="report-summary"></p>
+                        <div id="report-concepts"></div>
+                        <div id="report-recommendation" class="recommendation hidden">
+                            <h3>RECOMMENDED REVIEW</h3>
+                            <p id="report-recommendation-text"></p>
+                        </div>
+                    </div>
+                    <button id="report-restart-button" class="arcade-button">PLAY AGAIN</button>
+                    <button id="report-continue-button" class="arcade-button secondary">BACK TO START</button>
+                </section>
             </div>
         </div>
 
     </main>
+
+    <footer>
+        <span>© 2026 EDUARCADE</span>
+        <span>PLAY FOREVER / STAY CURIOUS</span>
+    </footer>
 </div>
 
+<!-- ================= LOG IN / ACCOUNT PANEL ================= -->
+<!-- Shown whenever one of its panels is not .hidden (see style.css). -->
+<div id="login-overlay" class="login-overlay">
+    <section id="login-screen" class="login-panel hidden" role="dialog" aria-modal="true" aria-labelledby="login-title">
+        <button type="button" class="login-close" aria-label="Close log in panel">×</button>
+        <span class="eyebrow">PLAYER ONE</span>
+        <h2 id="login-title">LOG IN</h2>
+        <p>Use your email and a password to save your learning progress. New player? Pick a password to create your account.</p>
+        <div class="login-form">
+            <label>
+                EMAIL
+                <input type="email" id="email-input" placeholder="player@arcade.com" autocomplete="email">
+            </label>
+            <label>
+                PASSWORD
+                <input type="password" id="password-input" placeholder="••••••••" autocomplete="current-password">
+            </label>
+            <button type="button" id="login-button">INSERT COIN / LOG IN</button>
+            <p id="login-error" class="error"></p>
+        </div>
+    </section>
 
+    <section id="account-menu" class="login-panel hidden" role="dialog" aria-modal="true" aria-labelledby="account-title">
+        <button type="button" class="login-close" aria-label="Close account panel">×</button>
+        <div class="login-success">
+            <div id="account-menu-avatar" class="player-puck"></div>
+            <span class="eyebrow">PLAYER READY</span>
+            <h2 id="account-title">SIGNED IN</h2>
+            <p id="account-email"></p>
+            <button type="button" id="account-progress-button">MY PROGRESS</button>
+            <button type="button" id="logout-button" class="secondary">SIGN OUT</button>
+        </div>
+    </section>
+</div>
+
+<!-- ================= GAME POPUPS ================= -->
 
 <div id="concept-popup" class="popup-overlay hidden">
     <div class="popup-card">
+        <span class="eyebrow">CONCEPT REVIEW</span>
         <h3>Let's review this concept</h3>
         <p id="concept-popup-explanation"></p>
-        <button id="retry-after-explanation" class="pill-button">Try Again</button>
+        <button id="retry-after-explanation" class="arcade-button">TRY AGAIN</button>
     </div>
 </div>
 
 <div id="game-over-popup" class="popup-overlay hidden">
     <div class="popup-card">
+        <span class="eyebrow">OUT OF LIVES</span>
         <h3>Game Over</h3>
         <p>You lost all 3 lives. What would you like to do? To keep playing, answer 3 questions correctly first.</p>
-        <button type="button" id="game-over-progress" class="pill-button">View My Progress</button>
-        <button type="button" id="game-over-continue" class="pill-button">Continue Playing</button>
+        <button type="button" id="game-over-progress" class="arcade-button secondary">VIEW MY PROGRESS</button>
+        <button type="button" id="game-over-continue" class="arcade-button">CONTINUE PLAYING</button>
     </div>
 </div>
 
 <div id="maze-cleared-popup" class="popup-overlay hidden">
     <div class="popup-card">
+        <span class="eyebrow">STAGE CLEAR</span>
         <h3>Maze Cleared!</h3>
         <p>What would you like to do?</p>
-        <button type="button" id="maze-cleared-play-again" class="pill-button">Play Again</button>
-        <button type="button" id="maze-cleared-progress" class="pill-button">View My Progress</button>
+        <button type="button" id="maze-cleared-play-again" class="arcade-button">PLAY AGAIN</button>
+        <button type="button" id="maze-cleared-progress" class="arcade-button secondary">VIEW MY PROGRESS</button>
     </div>
 </div>
 
@@ -228,16 +350,19 @@
         const emailInput = document.getElementById("email-input");
         const loginButton = document.getElementById("login-button");
         const avatarButton = document.getElementById("avatar-button");
+        const loginOverlay = document.getElementById("login-overlay");
         const loginPanel = document.getElementById("login-screen");
         const accountMenu = document.getElementById("account-menu");
+        const dashboardButton = document.getElementById("dashboard-button");
         function getSavedEmail() {
             return userEmail;
         }
         function refreshAccount() {
             const email = getSavedEmail();
-            avatarButton.textContent = email ? email[0].toUpperCase() : "👤";
+            document.getElementById("avatar-label").textContent = email ? email[0].toUpperCase() + " / PROFILE" : "LOG IN";
             avatarButton.classList.toggle("signed-in", Boolean(email));
-            avatarButton.title = email || "Sign in";
+            avatarButton.title = email || "Log in";
+            avatarButton.setAttribute("aria-label", email ? "Account: " + email : "Log in to your account");
             document.getElementById("account-menu-avatar").textContent = email ? email[0].toUpperCase() : "";
             document.getElementById("account-email").textContent = email || "";
             document.body.classList.toggle("signed-out", !email);
@@ -267,8 +392,13 @@
             }
         });
 
-        document.addEventListener("click", function (event) {
-            if (!event.target.closest(".account")) {
+        // Close the panel from its × button or a click on the dimmed backdrop.
+        document.querySelectorAll(".login-close").forEach(function (button) {
+            button.addEventListener("click", closeMenus);
+        });
+
+        loginOverlay.addEventListener("mousedown", function (event) {
+            if (event.target === loginOverlay) {
                 closeMenus();
             }
         });
@@ -285,12 +415,12 @@
             try {
                 await fetch("/logout", { method: "POST" });
             } catch (err) {
-                
+
             }
             try {
                 sessionStorage.setItem("open-signin", "1");
             } catch (err) {
-              
+
             }
             location.reload();
         });
@@ -304,7 +434,7 @@
         }
 
         startButton.addEventListener("click", requireLogin);
-        document.getElementById("dashboard-button").addEventListener("click", requireLogin);
+        dashboardButton.addEventListener("click", requireLogin);
 
         topicInput.addEventListener("keydown", function (event) {
             if (event.key === "Enter") {
@@ -313,14 +443,17 @@
             }
         });
 
-      
+
         startButton.addEventListener("click", function () {
             document.getElementById("tab-all").checked = true;
         });
 
-        document.getElementById("clear-topic").addEventListener("click", function () {
-            topicInput.value = "";
-            topicInput.focus();
+        // "TRY:" suggestions run the normal search with that topic.
+        document.querySelectorAll(".quick-search button").forEach(function (button) {
+            button.addEventListener("click", function () {
+                topicInput.value = button.dataset.topic;
+                startButton.click();
+            });
         });
 
         [emailInput, document.getElementById("password-input")].forEach(function (input) {
@@ -329,6 +462,156 @@
                     event.preventDefault();
                     loginButton.click();
                 }
+            });
+        });
+
+        // ------------------------------------------------------------
+        // Pages: home (search, lesson, arcade floor, My Progress) and
+        // the Pac-Man page (#pacman: game, questions, report).
+        // game.js shows and hides the screens as before; the page
+        // follows whichever screens it has made visible.
+        // ------------------------------------------------------------
+
+        const GAME_SCREENS = ["game-screen", "question-screen", "game-over-screen", "report-screen"];
+        const HOME_SCREENS = ["start-screen", "lesson-screen", "dashboard-screen"];
+
+        function isShown(id) {
+            return !document.getElementById(id).classList.contains("hidden");
+        }
+
+        function onGamePage() {
+            return document.body.classList.contains("page-pacman");
+        }
+
+        function setGamePage(game) {
+            if (game === onGamePage()) {
+                return;
+            }
+            document.body.classList.toggle("page-pacman", game);
+            if (game) {
+                document.getElementById("game-topic").textContent =
+                    document.getElementById("lesson-topic").textContent.toUpperCase();
+                if (location.hash !== "#pacman") {
+                    history.pushState(null, "", "#pacman");
+                }
+            } else if (location.hash === "#pacman") {
+                history.replaceState(null, "", location.pathname + location.search);
+            }
+            window.scrollTo({ top: 0, behavior: "instant" });
+        }
+
+        function syncPage() {
+            if (GAME_SCREENS.some(isShown)) {
+                setGamePage(true);
+            } else if (HOME_SCREENS.some(isShown)) {
+                // Between the last question and the report, no screen is
+                // shown; the page stays where it is until the report opens.
+                setGamePage(false);
+            }
+        }
+
+        // Leave the Pac-Man page the same ways its own buttons do.
+        function leaveGamePage() {
+            if (document.body.classList.contains("in-game")) {
+                exitPacmanGame();
+            } else if (GAME_SCREENS.some(isShown)) {
+                document.getElementById("game-over-screen").classList.add("hidden");
+                document.getElementById("report-continue-button").click();
+            }
+        }
+
+        let lessonWasShown = false;
+        let dashboardWasShown = false;
+        let boardWasShown = false;
+
+        new MutationObserver(function () {
+            syncPage();
+
+            // Keep the whole cabinet on screen whenever the maze is shown
+            // (arrow keys move Pac-Man, so they can't scroll the page).
+            const boardShown = isShown("game-screen");
+            if (boardShown && !boardWasShown) {
+                document.querySelector(".cabinet").scrollIntoView({ block: "center", behavior: "instant" });
+            }
+            boardWasShown = boardShown;
+
+            // Bring a newly shown lesson or My Progress into view.
+            const lessonShown = isShown("lesson-screen");
+            const dashboardShown = isShown("dashboard-screen");
+            if (lessonShown) {
+                floorMessage.textContent = "";
+            }
+            if (!onGamePage()) {
+                if (dashboardShown && !dashboardWasShown) {
+                    document.getElementById("dashboard-screen").scrollIntoView({ behavior: "smooth" });
+                } else if (lessonShown && !lessonWasShown) {
+                    document.getElementById("lesson-screen").scrollIntoView({ behavior: "smooth" });
+                }
+            }
+            lessonWasShown = lessonShown;
+            dashboardWasShown = dashboardShown;
+        }).observe(document.querySelector(".screens"), {
+            attributes: true,
+            attributeFilter: ["class"],
+            subtree: true
+        });
+
+        // Browser Back from #pacman leaves the game, like the back button.
+        window.addEventListener("popstate", function () {
+            if (location.hash === "#pacman") {
+                if (!onGamePage()) {
+                    history.replaceState(null, "", location.pathname + location.search);
+                }
+            } else if (onGamePage()) {
+                leaveGamePage();
+            }
+        });
+
+        if (location.hash === "#pacman") {
+            history.replaceState(null, "", location.pathname + location.search);
+        }
+
+        document.getElementById("brand-button").addEventListener("click", function () {
+            leaveGamePage();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+        // My Progress (header) also works from the Pac-Man page.
+        dashboardButton.addEventListener("click", leaveGamePage);
+
+        // The Pac-Man cabinet opens the game page. Like the old Play
+        // button, it needs a signed-in player and a loaded lesson.
+        const floorMessage = document.getElementById("floor-message");
+
+        document.getElementById("start-quiz-button").addEventListener("click", function (event) {
+            if (!getSavedEmail()) {
+                event.stopImmediatePropagation();
+                openMenu();
+                return;
+            }
+            if (!isShown("lesson-screen")) {
+                event.stopImmediatePropagation();
+                floorMessage.textContent = "Search a topic first. The game asks questions about your lesson.";
+                topicInput.focus();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                return;
+            }
+            floorMessage.textContent = "";
+        });
+
+        document.getElementById("go-to-floor").addEventListener("click", function () {
+            document.getElementById("arcade-floor").scrollIntoView({ behavior: "smooth" });
+        });
+
+        // The on-screen D-pad presses the same keys as the keyboard.
+        document.querySelectorAll(".dpad button").forEach(function (button) {
+            button.addEventListener("click", function () {
+                document.dispatchEvent(new KeyboardEvent("keydown", {
+                    key: button.dataset.code,
+                    code: button.dataset.code,
+                    bubbles: true,
+                    cancelable: true
+                }));
             });
         });
 
@@ -342,13 +625,9 @@
             ["game-over-screen", "report-screen"].forEach(function (id) {
                 document.getElementById(id).classList.add("hidden");
             });
-            document.getElementById("dashboard-button").click();
+            dashboardButton.click();
         });
 
-        document.getElementById("dashboard-proxy-button").addEventListener("click", function (event) {
-            event.stopPropagation(); 
-            document.getElementById("dashboard-button").click();
-        });
         window.addEventListener("DOMContentLoaded", function () {
             refreshAccount();
 
@@ -358,7 +637,7 @@
                     openMenu();
                 }
             } catch (err) {
-              
+
             }
 
             document.getElementById("dashboard-back-button").addEventListener("click", function () {
