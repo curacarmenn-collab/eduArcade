@@ -1626,11 +1626,62 @@ function continueAfterGameOver() {
 
     lives = 3;
 
+    restoreGhosts();
+
     resetPositions();
 
     readyFrames = READY_FRAMES;
 
     update();
+
+}
+
+
+// "Continue" brings back every regular ghost, including the ones
+// already beaten. If the Boss is out, it stays alone (it fights
+// alone, see spawnBossGhost()).
+function restoreGhosts() {
+
+    const bossOut = [...ghosts].some(function (ghost) {
+        return ghost.isBoss;
+    });
+
+    if (bossOut) {
+        return;
+    }
+
+    const ghostImages = {
+        b: blueGhostImage,
+        o: orangeGhostImage,
+        p: pinkGhostImage,
+        r: redGhostImage
+    };
+
+    ghosts.clear();
+
+    for (let r = 0; r < rowCount; r++) {
+
+        for (let c = 0; c < columnCount; c++) {
+
+            const image = ghostImages[tileMap[r][c]];
+
+            if (image) {
+
+                ghosts.add(
+                    new Block(
+                        image,
+                        c * tileSize,
+                        r * tileSize,
+                        tileSize,
+                        tileSize
+                    )
+                );
+
+            }
+
+        }
+
+    }
 
 }
 
@@ -2817,6 +2868,22 @@ function handleCorrectAnswer(data) {
     if (data.next_question) {
 
         currentQuestion = data.next_question;
+
+    }
+
+
+    // Only the Boss asks the Boss question. Ghosts brought back by
+    // "Continue" can outnumber the regular questions; once those are
+    // done, the extra ghosts leave, as they do when the Boss appears.
+    if (currentQuestion && currentQuestion.is_boss) {
+
+        for (let ghost of ghosts.values()) {
+
+            if (!ghost.isBoss) {
+                ghosts.delete(ghost);
+            }
+
+        }
 
     }
 
