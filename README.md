@@ -6,7 +6,7 @@ A student searches for any topic and gets a short AI-generated lesson, broken in
 
 Every answer is recorded per concept. The app tracks mastery over time and explains mistakes. **My Progress** and a **Learning Report** after each game show how the student's understanding is changing.
 
-The interface looks like a dark-mode Google search results page. Gemini is used for lessons, questions, explanations and grading.
+The interface is a retro arcade: a big search bar, an "arcade floor" of game cabinets, and a separate Pac-Man page with the game inside an arcade cabinet. Gemini is used for lessons, questions, explanations and grading.
 
 ---
 
@@ -29,31 +29,32 @@ The interface looks like a dark-mode Google search results page. Gemini is used 
 ## How it works
 
 ```text
-Sign in (avatar, top right)
+LOG IN (top right)
       ↓
 Search a topic, e.g. "python" or "photosynthesis"
       ↓
-All tab: AI Overview, lesson, and a Learning Map of 4 concepts
+AI Lesson: explanation, lesson, and a Learning Map of 4 concepts
       ↓
-Game tab (unlocked after a search) → Play
+Arcade Floor → click the PAC-MAN cabinet
       ↓
-Pac-Man: a ghost catches you → answer a question at your level
+Pac-Man page (#pacman): a ghost catches you → answer a question at your level
       ↓
 Clear the maze → the Boss Ghost appears → free-response challenge
       ↓
 Learning Report → My Progress
 ```
 
-1. **Sign in.** Use an email and password. A new email creates an account.
-2. **Search.** The first search for a topic makes Gemini generate a *learning package*, which is saved and reused for everyone. The package contains:
+1. **Log in.** The **LOG IN** button in the top-right corner opens a sign-in panel. Use an email and password; a new email creates an account. Once signed in, the button opens your account panel (My Progress, Sign out).
+2. **Search.** Type a topic in the search bar and press Enter or **SEARCH**, or pick one of the **TRY:** suggestions. The first search for a topic makes Gemini generate a *learning package*, which is saved and reused for everyone. The package contains:
    - a short explanation and lesson;
    - a map of 4 concepts in prerequisite order, each with a difficulty and learning objective;
    - 5 questions.
 
    Searches worded differently ("loops in python") are matched to an existing topic, so they don't cost a new generation.
-3. **Learning Map.** Shows the 4 concepts in the order to learn them, their prerequisites, and the student's current mastery of each.
-4. **Game tab.** An "EduArcade Games" page with a Pac-Man card and a **Play** button. It stays disabled until a search succeeds.
-5. **My Progress.** Available at any time from the account menu, even before a first search. With no activity yet it says "No learning activity yet".
+3. **AI Lesson.** Appears on the home page under the search bar: the explanation, the lesson, and the **Learning Map**, which shows the 4 concepts in the order to learn them, their prerequisites, and the student's current mastery of each.
+4. **Arcade Floor.** A row of game cabinets. **PAC-MAN** is playable; Galaga, Tetris and Frogger are marked "Coming soon". Clicking PAC-MAN opens the game on its own page (the URL ends in `#pacman`). It needs a signed-in player and a lesson: without them, it asks you to log in or to search a topic first.
+5. **Pac-Man page.** The real game runs inside an arcade cabinet. Move with the arrow keys / WASD or the on-screen D-pad (which also makes it playable on a touch screen). The board is sized to fit the window, so the whole maze and the controls stay on screen.
+6. **My Progress.** Available at any time from **MY PROGRESS** in the header or the account panel, even before a first search. With no activity yet it says "No learning activity yet".
 
 ---
 
@@ -61,7 +62,7 @@ Learning Report → My Progress
 
 | Event | What happens |
 |---|---|
-| Arrow keys / WASD | Move. A turn pressed slightly early is remembered and taken at the next opening. |
+| Arrow keys / WASD / on-screen D-pad | Move. A turn pressed slightly early is remembered and taken at the next opening. |
 | White pellet | +10 points |
 | Power Pellet (4 corners) | +50 points. Ghosts turn blue and flee for 8 seconds, flashing back to their normal colours as a warning before recovering. |
 | Eat a blue ghost | 200 / 400 / 800 / 1600 points. It becomes eyes that return to the cage and respawn. **No question.** |
@@ -73,13 +74,14 @@ Learning Report → My Progress
 | Boss answered correctly | The game ends and shows the **Learning Report**. |
 | Maze cleared again while the Boss is out | "Maze Cleared!" popup: **Play Again** starts a new game immediately; **View My Progress** opens the dashboard. |
 | Out of lives | "Game Over" popup: **View My Progress**, or **Continue Playing** after a **3-question checkpoint** (below). |
-| × button | Leave the game at any time and return to the lesson. |
+| **BACK TO ARCADE FLOOR** (or the browser's Back button) | Leave the game at any time and return to the lesson on the home page. |
 
 **Game Over checkpoint.** To continue, the student answers 3 questions correctly.
 - The questions target the student's **3 lowest-mastery concepts**, one question per concept.
 - Each question is at that concept's adaptive difficulty, and none has already been asked in this game.
 - Gemini writes new questions if needed.
 - Afterwards the game continues where it stopped: same session, eaten pellets stay eaten, and lives reset to 3.
+- **All four ghosts come back**, including ones already beaten. If the Boss is already out, it stays alone. Once the remaining ghost questions have been answered, any extra ghosts leave the board, so only the Boss asks the Boss question.
 
 ---
 
@@ -218,15 +220,16 @@ Games in progress are held in server memory. Restarting the server, including th
 | `student_model.py` | Records answers; reads mastery, struggles, progress, session gain and adaptive difficulty |
 | `mastery.py` | Mastery formula, difficulty bands and the adaptive difficulty rule |
 | `db.py`, `schema.sql` | SQLite connection and schema |
-| `templates/index.html` | The single-page UI: search, lesson, Game tab, game, popups, report, My Progress |
+| `templates/index.html` | The page: header and login panel, search, AI lesson, Arcade Floor, My Progress, the Pac-Man page (`#pacman`: game cabinet, questions, report) and popups. Its script switches between the home and Pac-Man pages to follow the screens `game.js` shows. |
 | `static/game.js` | Frontend logic: search, Pac-Man (canvas), questions, checkpoint, Boss, report, dashboard |
-| `static/style.css` | Styles (dark palette) |
-| `static/images/` | Sprites and the Game tab artwork |
+| `static/style.css` | The arcade design (from the Figma design in `figmagoogle/figma/`): DM Mono and Space Grotesk fonts, dark palette with yellow, cyan and pink accents |
+| `static/images/` | Pac-Man, ghost and wall sprites drawn on the game canvas |
 
 The following are not used by the running app:
 - `static/pacman.css`: left over from the original standalone Pac-Man game.
-- `static/images/pacman-game-icon.png`: an older version of the Game tab artwork.
-- `figmagoogle/` and the root `index.html`: design mockups.
+- `static/images/pacman-game-icon.jpg` and `.png`: artwork from the old Game tab (the new PAC-MAN card is drawn with CSS).
+- `figmagoogle/figma/`: the Figma export (React) the interface was built from, kept as the design reference.
+- `figmagoogle/index.html`, `figmagoogle/styles.css` and the root `index.html`: older design mockups.
 
 ---
 
@@ -276,8 +279,19 @@ SQLite (`database.db`, created from `schema.sql`).
 
 ## Changelog
 
+### Arcade interface redesign
+- New interface from the Figma design, replacing the Google-style look. Only the page and styles changed; the game, questions, login and progress logic are the same.
+- Hero search bar with **TRY:** topic suggestions.
+- **LOG IN** button with a slide-in sign-in panel, which becomes the account panel once signed in.
+- AI Lesson and Learning Map on the home page.
+- **Arcade Floor** with the PAC-MAN cabinet (other cabinets "Coming soon"), replacing the All/Game tabs.
+- Pac-Man on its own page (`#pacman`) inside an arcade cabinet, with an on-screen D-pad; the browser's Back button leaves the game.
+- The board fits the window, so the whole maze and controls are visible while playing.
+- Questions, report, My Progress and popups restyled to match.
+- **Continue Playing** after Game Over now brings all four ghosts back.
+
 ### Game and interface
-- Black arcade backdrop, centred board, and an × exit button that works during questions, popups and the Boss.
+- Black arcade backdrop, centred board, and an × exit button that works during questions, popups and the Boss (now **BACK TO ARCADE FLOOR**).
 - Classic Pac-Man rules:
   - responsive controls with input buffering;
   - tunnel on row 9, with ghosts kept inside the maze;
@@ -288,7 +302,7 @@ SQLite (`database.db`, created from `schema.sql`).
 - Game Over popup with My Progress, or Continue Playing via the 3-question checkpoint. Eaten pellets persist.
 - The Boss now appears when the last white pellet is eaten (it used to appear after all four ghosts), and the white pellets reset for the Boss phase.
 - Maze Cleared popup: Play Again (no checkpoint) or View My Progress.
-- Game tab redesigned as a game launcher, and locked until a successful search.
+- Game tab redesigned as a game launcher, and locked until a successful search (now the Arcade Floor).
 - My Progress added to the account menu, with an empty state.
 - Game instructions updated to match the mechanics.
 - Unfinished "Likely misconception" labels removed from the UI.
