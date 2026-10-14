@@ -940,6 +940,56 @@ def remediation(data, game):
 
 CHECKPOINT_SIZE = 3
 
+# Ghosts on the board at the start of a game, one per concept.
+GHOSTS = 4
+
+
+def returning_ghost_concepts(game):
+    """
+    Concepts for the questions of the ghosts "Continue Playing" brings
+    back (game.js restoreGhosts()): one for each ghost already beaten,
+    so every ghost on the board has a question to ask. None once the
+    Boss is out: it stays alone.
+    """
+    current = game["current_question"]
+
+    if not current or current["is_boss"]:
+        return []
+
+    waiting = [
+        current,
+        *(q for q in game["question_queue"] if not q["is_boss"])
+    ]
+
+    waiting_concepts = {q["concept_id"] for q in waiting}
+
+    concepts = list(game["concept_names"])
+
+    # The beaten ghosts' concepts first, in learning-map order.
+    ordered = (
+        [c for c in concepts if c not in waiting_concepts] + concepts
+    )
+
+    return ordered[:max(0, GHOSTS - len(waiting))]
+
+
+def add_returning_ghost_questions(game, questions):
+    """Queue the returning ghosts' questions before the Boss's (always
+    the last one queued) and count them in the game's total."""
+    current = game["current_question"]
+
+    if not questions or not current or current["is_boss"]:
+        return
+
+    queue = game["question_queue"]
+
+    if queue and queue[-1]["is_boss"]:
+        queue[-1:-1] = questions
+    else:
+        queue.extend(questions)
+
+    game["total"] += len(questions)
+
 @app.route("/checkpoint/start", methods=["POST"])
 @login_required
 @with_own_game
@@ -981,6 +1031,8 @@ def start_checkpoint(data, game):
 
         targets += others[:CHECKPOINT_SIZE - len(targets)]
 
+        extra_concepts = returning_ghost_concepts(game)
+
         user_id = game["user_id"]
         topic_id = game["topic_id"]
         topic_title = game["topic"]
@@ -999,10 +1051,21 @@ def start_checkpoint(data, game):
             503
         )
 
+    # The returning ghosts' questions, picked the same way and unlike
+    # every question above.
+    returning = adaptive_questions(
+        user_id, topic_id, topic_title, extra_concepts,
+        used_ids | {q["question_id"] for q in chosen}
+    ) if extra_concepts else []
+
     with game["lock"]:
 
         if game["complete"]:
             return error("This game is already finished.", 400)
+
+        add_returning_ghost_questions(
+            game, [game_question(q) for q in returning if q]
+        )
 
         chosen = [
             game_question(
